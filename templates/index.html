@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Market Basic Data</title>
+    <style>
+        body {
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: left;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 66%;
+            margin: 0 auto;
+            overflow: auto;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .numeric-column {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .filter-container {
+            margin-bottom: 20px; /* Increase the margin-bottom value as desired */
+        }
+
+        .error-messages {
+            background-color: #ffcccc;
+            border: 1px solid #ff0000;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .error-messages h3 {
+            color: #ff0000;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .error-messages ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .error-messages li {
+            color: #ff0000;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .error-messages li i {
+            margin-right: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Stock Market Basic Data</h1>
+    <form method="POST" action="/">
+        <select name="company">
+            {% for stock in stocks %}
+                <option value="{{ stock }}">{{ stock }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="start-date">Start Date:</label>
+        <input type="text" id="start-date" name="start-date" pattern="\d{4}-\d{2}-\d{2}" title="Enter a date in the format YYYY-MM-DD" value="{{ current_date }}" required>
+    
+        <label for="end-date">End Date:</label>
+        <input type="text" id="end-date" name="end-date" pattern="\d{4}-\d{2}-\d{2}" title="Enter a date in the format YYYY-MM-DD" value="{{ current_date }}" required>
+    
+        <input type="submit" value="Filter">
+
+    </form>       
+    <table>
+        <tr>
+            <th>Company</th>
+            <th>Datetime</th>
+            <th>Adjusted Close</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+            <th>Open</th>
+            <th>Volume</th>
+        </tr>
+        {% set counter = 0 %}
+        {% for row in data %}
+            {% if counter < 25 %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td class="numeric-column">{{ '%.2f' % row[2] }}</td>
+                    <td class="numeric-column">{{ '%.2f' % row[3] }}</td>
+                    <td class="numeric-column">{{ '%.2f' % row[4] }}</td>
+                    <td class="numeric-column">{{ '%.2f' % row[5] }}</td>
+                    <td class="numeric-column">{{ '%.2f' % row[6] }}</td>
+                    <td>{{ row[7] }}</td>
+                </tr>
+                {% set counter = counter + 1 %}
+            {% endif %}
+        {% endfor %}
+        {% if errors %}
+            <div class="error-messages">
+                <h3>No Available Data:</h3>
+                <ul>
+                    {% for error in errors %}
+                        <li><i class="fa fa-exclamation-circle"></i> {{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </table>
+    {% if data|length > 25 %}
+        <p>Showing first 25 rows. Total rows: {{ data|length }}</p>
+    {% else %}
+        <p>Total rows: {{ data|length }}</p>
+    {% endif %}
+    <p>Additional details about the stock market basic data project:</p>
+    <ul>
+        <li>Source of the data - Yahoo Finance</li>
+        <li>Display History data for last 3 years.</li>
+    </ul>
+    
+</body>
+</html>

@@ -1,0 +1,6 @@
+yfinance
+Flask
+numpy
+matplotlib
+db-sqlite3
+gunicorn

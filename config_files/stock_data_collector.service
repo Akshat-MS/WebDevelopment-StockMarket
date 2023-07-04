@@ -1,0 +1,20 @@
+# This is a systemd service unit file for collecting Stock Data from Yahoo Finance.
+# It is triggered by the stock_data_collector.timer every evening at 5:00 PM.
+
+[Unit]
+# The Description field provides a brief description of the service.
+Description=Service to collect the Stock Data from Yahoo Finance
+# The Wants directive ensures that the service is started together with the associated timer.
+Wants=stock_data_collector.timer
+
+[Service]
+# The User directive specifies the user under which the service should run.
+User=ubuntu
+# The WorkingDirectory directive sets the working directory for the service.
+WorkingDirectory=/home/ubuntu/StockMarket/
+# The ExecStart directive specifies the command to start the service.
+ExecStart=/usr/bin/python3 /home/ubuntu/StockMarket/stock_data_collector.py
+# The Environment directive sets the environment variable(s) for the service.
+Environment="PATH=/home/ubuntu/StockMarket/venv/bin"
+
+# End of .service file.
