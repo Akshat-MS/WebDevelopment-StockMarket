@@ -11,8 +11,7 @@ class StockDataCollector:
         self.time_util = TimeUtil()
 
     def fetch_data(self):
-        config_file_path = './config_files/config.ini'
-        reader = ConfigReader(config_file_path)
+        reader = ConfigReader()
         reader.read_config()
 
         try:
@@ -47,8 +46,7 @@ class StockDataCollector:
         
     def fetch_daily_stock_data(self,stocks):
 
-        config_file_path = './config_files/config.ini'
-        reader = ConfigReader(config_file_path)
+        reader = ConfigReader()
         reader.read_config()
 
         try:
@@ -84,14 +82,13 @@ class StockDataCollector:
     
     def store_data_db(self,stock_data):
 
-        config_file_path = './config_files/config.ini'
-        reader = ConfigReader(config_file_path)
+        reader = ConfigReader()
         reader.read_config()
 
         db_path = reader.get_db_path()
         stk_db_handler = StockDataManager(db_path)
 
-        stk_db_handler.insert_data(stock_data,reader.get_stocks())
+        stk_db_handler.insert_stock_data(stock_data,reader.get_stocks())
 
         stk_db_handler.disconnect()
 
@@ -108,8 +105,9 @@ def main():
         print("No Data")
 
     
-    file_path = './config_files/config.ini'
-    reader1 = ConfigReader(file_path)
+    reader1 = ConfigReader(
+
+    )
     reader1.read_config()
 
     stk_daily_data = fetcher.fetch_daily_stock_data(reader1.get_stocks())
