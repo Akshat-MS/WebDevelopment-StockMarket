@@ -230,17 +230,17 @@ class StockDataManager:
             raise e
         
     
-    def fetch_data(self,offset,limit):
+    '''def fetch_data(self,offset,limit):
         try:
             Logger.get_instance().log(logging.INFO,'StockDataManager','fetch_data() : SELECT all data from the basic_stock_data table' 
                                 + 'Query:SELECT * FROM basic_stock_data')
             self.cursor.execute("SELECT * FROM basic_stock_data",(limit, offset))
             rows = self.cursor.fetchall()
             columns = [column[0] for column in self.cursor.description]
-            return rows , columns
+            return rows ,columns
         except sqlite3.Error as e:
             Logger.get_instance().log(logging.CRITICAL,'StockDataManager','fetch_data():An error occurred while fetching the data: ' + str(e))
-            raise e
+            raise e'''
             
     def fetch_data_by_company_and_dates(self, company, start_date, end_date):
 

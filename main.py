@@ -6,6 +6,7 @@ from config_reader import ConfigReader
 from stock_db_handler import StockDataManager
 from time_util import TimeUtil
 from logger import Logger
+
 import json
 
 def extract_company_name(stock):
@@ -26,7 +27,9 @@ def get_company_names():
     return stk_db_handler.fetch_companies()
 
 app = Flask(__name__)
+
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/stocks/', methods=['GET', 'POST'])
 def display_table():
 
     if request.method == 'POST':
@@ -39,8 +42,8 @@ def display_table():
 
         print(company, start_date, end_date)
 
-        #Logger.get_instance().log(logging.INFO,'@app.route [POST Request]','display_table : In coming request with following Parameters: '
-        #                         + '\nCompany Name: ' + company + '\nStart Date: ' + start_date + '\nEnd Date: ' + end_date + '',)
+        Logger.get_instance().log(logging.INFO,'@app.route [POST Request]','display_table : In coming request with following Parameters: '
+                                 + '\nCompany Name: ' + company + '\nStart Date: ' + start_date + '\nEnd Date: ' + end_date + '',)
 
         # Validate the incoming data
         errors = []
@@ -101,9 +104,9 @@ def display_table():
             end_datetime = datetime.combine(end_datetm, end_time)
             l_end_date_time = time_util.get_loacal_time(end_datetime)
 
-            #Logger.get_instance().log(logging.DEBUG,'@app.route [POST Request]','display_table : fetching data from database with parameters: '
-            #                         + '\nSelected company name:' + company + '\nLocalize Start date:' + l_start_date_time 
-            #                         +'\nLocalize End date:' + l_end_date_time)
+            Logger.get_instance().log(logging.DEBUG,'@app.route [POST Request]','display_table : fetching data from database with parameters: '
+                                     + '\nSelected company name:' + company + '\nLocalize Start date:' + l_start_date_time 
+                                     +'\nLocalize End date:' + l_end_date_time)
 
             if company:
                 # Fetch data from the database based on the selected company and date range
@@ -148,7 +151,7 @@ def display_table():
         current_date = date.today().isoformat()
         if company is "":
             company = symbols[0]
-        return render_template('index.html', data=data[:1000], selected_company=company, stocks=symbols,current_date=current_date)
+        return render_template('index.html', data=data[:900], selected_company=company, stocks=symbols,current_date=current_date)
 
 ''' @app.route('/fetch-data', methods=['POST'])
 def fetch_data():

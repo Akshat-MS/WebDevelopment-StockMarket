@@ -30,6 +30,15 @@ else
     fi
 fi
 
+# Activate the virtual environment
+echo "Reloading systemd daemon..."
+if source /home/ubuntu/StockMarket/venv/bin/activate; then
+    echo "Python Virtual environment activated successfully."
+else
+    echo "Failed to activate Python virtual Environment."
+    exit 1
+fi
+
 # ______________________Project Prerequisites____________________
 # Installing Prerequisites packages required for the project
 echo "Installing project prerequisites..."
