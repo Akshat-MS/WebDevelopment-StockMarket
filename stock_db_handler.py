@@ -229,18 +229,61 @@ class StockDataManager:
             Logger.get_instance().log(logging.CRITICAL,'StockDataManager','fetch_data():An error occurred while fetching the data: ' + str(e))
             raise e
         
+    def generate_search_query(self,start_date=None, end_date=None, company=None,limit=None, offset=None):
+        query = "SELECT * FROM basic_stock_data"
+        conditions = []
+
+        if start_date:
+            conditions.append(f"DATE(Datetime) >= '{start_date}'")
+        
+        if end_date:
+            conditions.append(f"DATE(Datetime) <= '{end_date}'")
+
+        if company:
+            conditions.append(f"company = '{company}'")
+        
+        print('Conditions',conditions)
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+        print('Query :- ', query)
+
+        if limit:
+            query += f" LIMIT {limit}"
+        
+        if offset:
+            query += f" OFFSET {offset}"
+
+        return query
     
-    '''def fetch_data(self,offset,limit):
+    def fetch_data_api(self,req_param):
         try:
-            Logger.get_instance().log(logging.INFO,'StockDataManager','fetch_data() : SELECT all data from the basic_stock_data table' 
-                                + 'Query:SELECT * FROM basic_stock_data')
-            self.cursor.execute("SELECT * FROM basic_stock_data",(limit, offset))
+
+            company = req_param.get('company')
+            start_date = req_param.get('startdate')
+            end_date = req_param.get('enddate')
+            limit = req_param.get('limit',500)
+            offset = req_param.get('offset',0)
+
+            Logger.get_instance().log(logging.INFO,'StockDataManager','fetch_data_by_company_and_dates() : Input Parameters are : ' 
+                                  + '\nCompany Name:' + company + '\nStart Date:' + str(start_date) 
+                                  + '\nEnd Date:' + str(end_date) + '\nLimit:' + str(limit) + '\nOffset:' + str(offset))
+            
+            
+            query = self.generate_search_query(start_date, end_date, company,limit, offset)
+            print("Final Query :- ", query)
+            self.cursor.execute(query)
+            '''self.cursor.execute(
+                "SELECT * FROM basic_stock_data WHERE company = ? AND Datetime BETWEEN ? AND ? LIMIT ? OFFSET ?",
+                (company, start_date, end_date,limit, offset)
+            )'''
+
             rows = self.cursor.fetchall()
+
             columns = [column[0] for column in self.cursor.description]
             return rows ,columns
         except sqlite3.Error as e:
             Logger.get_instance().log(logging.CRITICAL,'StockDataManager','fetch_data():An error occurred while fetching the data: ' + str(e))
-            raise e'''
+            raise e
             
     def fetch_data_by_company_and_dates(self, company, start_date, end_date):
 

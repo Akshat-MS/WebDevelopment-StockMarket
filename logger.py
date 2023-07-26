@@ -37,6 +37,7 @@ class Logger:
 
         try:
             log_rollover_count = self.config.get("logging","rollover_count")
+            print(type(log_rollover_count),log_rollover_count)
         except:
             pass
 
@@ -46,7 +47,7 @@ class Logger:
         max_bytes = int(log_max_file_size)  # Convert max size to integer
         self.logger.setLevel(log_level)
 
-        file_handler = RotatingFileHandler(filename=f'./logs/debug.log', maxBytes=max_bytes, backupCount=log_rollover_count)
+        file_handler = RotatingFileHandler(filename=f'./logs/debug.log', maxBytes=max_bytes, backupCount=5)
         file_handler.setLevel(log_level)
         formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s [%(module)s]: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
         file_handler.setFormatter(formatter)
